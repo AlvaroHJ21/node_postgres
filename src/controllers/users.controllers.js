@@ -25,8 +25,8 @@ const getUserController = async (req = request, res = response, next) => {
 const createUserController = async (req = request, res = response, next) => {
     try {
         const body = req.body;
-        const newCategory = await service.create(body);
-        res.status(201).json(newCategory);
+        const newUser = await service.create(body);
+        res.status(201).json(newUser);
     } catch (error) {
         next(error);
     }

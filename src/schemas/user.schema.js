@@ -1,29 +1,23 @@
-const boom = require('@hapi/boom');
+const Joi = require('joi');
 
-class OrderService {
-    constructor() {}
-    async create(data) {
-        return data;
-    }
+const id = Joi.number().integer();
+const email = Joi.string().email();
+const password = Joi.string().min(8);
+const role = Joi.string().min(5);
 
-    async find() {
-        return [];
-    }
+const createUserSchema = Joi.object({
+    email: email.required(),
+    password: password.required(),
+    role: role.required(),
+});
 
-    async findOne(id) {
-        return { id };
-    }
+const updateUserSchema = Joi.object({
+    email: email,
+    role: role,
+});
 
-    async update(id, changes) {
-        return {
-            id,
-            changes,
-        };
-    }
+const getUserSchema = Joi.object({
+    id: id.required(),
+});
 
-    async delete(id) {
-        return { id };
-    }
-}
-
-module.exports = OrderService;
+module.exports = { createUserSchema, updateUserSchema, getUserSchema };

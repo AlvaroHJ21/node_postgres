@@ -5,7 +5,8 @@ const {
     logErrors,
     boomErrorHandler,
     errorHandler,
-} = require('../middlewares/error.handler');
+    ormErrorHandler,
+} = require('./middlewares/error.handler');
 
 class Server {
     constructor() {
@@ -19,7 +20,7 @@ class Server {
     }
 
     routes() {
-        this.app.use(this.path, require('../routes'));
+        this.app.use(this.path, require('./routes'));
     }
 
     middlewares() {
@@ -35,10 +36,15 @@ class Server {
             },
         };
         this.app.use(cors(options));
-        this.app.use(morgan());
+        this.app.use(morgan('tiny'));
     }
     middlewaresError() {
-        this.app.use(logErrors, boomErrorHandler, errorHandler);
+        this.app.use(
+            logErrors,
+            ormErrorHandler,
+            boomErrorHandler,
+            errorHandler
+        );
     }
 
     listen() {

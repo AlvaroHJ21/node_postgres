@@ -1,12 +1,13 @@
 const faker = require('faker');
+const { Op } = require('sequelize');
 const boom = require('@hapi/boom');
-// const pool = require('../libs/postgres-pool');
-const sequelize = require('../libs/sequelize');
+
+const { models } = require('../libs/sequelize');
 
 class ProductsService {
     constructor() {
-        this.products = [];
-        this.generate();
+        // this.products = [];
+        // this.generate();
         // this.pool = pool;
         // this.pool.on('error', (err) => console.log(err));
     }
@@ -25,24 +26,32 @@ class ProductsService {
     }
 
     async create(data) {
-        const newProduct = {
-            id: faker.datatype.uuid(),
-            ...data,
-        };
-        this.products.push(newProduct);
+        const newProduct = await models.Product.create(data);
         return newProduct;
     }
 
-    async find() {
-        const query = 'SELECT * FROM PRODUCTS;';
-        const [data] = await sequelize.query(query);
-        return data;
+    async find(query) {
+        const options = {
+            include: ['category'],
+            where: {},
+        };
+        const { offset, limit, price, price_min, price_max } = query;
+        if (offset && limit) {
+            options.offset = offset;
+            options.limit = limit;
+        }
+        if (price) options.where.price = price;
+        if (price_min && price_max)
+            options.where.price = { [Op.gte]: price_min, [Op.lte]: price_max };
+
+        const products = await models.Product.findAll(options);
+        return products;
     }
 
     async findOne(id) {
-        const product = this.products.find((product) => product.id === id);
+        const product = await models.Product.findByPk(id);
         if (!product) throw boom.notFound('Product not found');
-        if (product.isBlock) throw boom.conflict('Product is blocked');
+        // if (product.isBlock) throw boom.conflict('Product is blocked');
         return product;
     }
 

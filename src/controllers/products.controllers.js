@@ -5,7 +5,8 @@ const service = new ProductsService();
 
 const getProductsController = async (req = request, res = response, next) => {
     try {
-        const products = await service.find();
+        const query = req.query;
+        const products = await service.find(query);
         res.json({
             ok: true,
             products,

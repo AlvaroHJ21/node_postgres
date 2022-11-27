@@ -11,11 +11,16 @@ const {
     getProductSchema,
     createProductSchema,
     updateProductSchema,
+    queryProductSchema,
 } = require('../schemas/product.schema');
 
 const router = express.Router();
 
-router.get('/', getProductsController);
+router.get(
+    '/',
+    validatorHandler(queryProductSchema, 'query'),
+    getProductsController
+);
 
 router.get(
     '/:id',

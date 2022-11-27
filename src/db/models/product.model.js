@@ -11,6 +11,7 @@ const ProductSchema = {
     },
     name: { allowNull: false, type: DataTypes.STRING },
     price: { allowNull: false, type: DataTypes.INTEGER },
+    description: { allowNull: false, type: DataTypes.TEXT },
     image: { allowNull: false, type: DataTypes.STRING },
     createdAt: {
         allowNull: false,
@@ -18,10 +19,26 @@ const ProductSchema = {
         field: 'create_at',
         defaultValue: Sequelize.NOW,
     },
+    categoryId: {
+        allowNull: false,
+        type: DataTypes.INTEGER,
+        field: 'category_id',
+        references: {
+            model: 'categories',
+            key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL',
+    },
 };
 
 class Product extends Model {
-    static associate() {}
+    static associate(models) {
+        this.belongsTo(models.Category, {
+            as: 'category',
+            foreignKey: 'categoryId',
+        });
+    }
     static config(sequelize) {
         return {
             sequelize,

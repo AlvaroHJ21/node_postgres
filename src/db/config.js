@@ -1,9 +1,9 @@
-const { database } = require('../config/config');
+const { database, config } = require('../config/config');
 const URI = `postgres://${database.pgUser}:${database.pgPassword}@${database.pgHost}:${database.pgPort}/${database.pgDatabase}`;
 
 module.exports = {
     development: {
-        // url: URI,
+        url: config.dbUrl,
         username: database.pgUser,
         password: database.pgPassword,
         database: database.pgDatabase,
@@ -12,7 +12,10 @@ module.exports = {
         dialect: 'postgres',
     },
     production: {
-        url: URI,
+        url: config.dbUrl,
         dialect: 'postgres',
+        ssl: {
+            rejectUnauthorized: false,
+        },
     },
 };

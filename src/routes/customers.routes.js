@@ -8,6 +8,7 @@ const {
 } = require('../schemas/customer.schema');
 const {
     getCustomersController,
+    getCustomerController,
     updateCustomerController,
     deleteCustomerController,
     createCustomerController,
@@ -16,6 +17,8 @@ const {
 const router = express.Router();
 
 router.get('/', getCustomersController);
+
+router.get('/:id', getCustomerController);
 
 router.post(
     '/',

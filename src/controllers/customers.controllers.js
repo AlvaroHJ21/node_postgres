@@ -1,3 +1,4 @@
+
 const CustomerService = require('../services/customers.service');
 const service = new CustomerService();
 
@@ -11,7 +12,8 @@ const getCustomersController = async (req, res, next) => {
 
 const getCustomerController = async (req, res, next) => {
     try {
-        res.json(await service.find());
+        const { id } = req.params;
+        res.json(await service.findOne( id ));
     } catch (error) {
         next(error);
     }
